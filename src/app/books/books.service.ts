@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
-const baseUrl = 'https://openlibrary.org';
+const baseUrl = 'http://openlibrary.org';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +22,7 @@ export class BooksService {
 
     const result = this.http.get(url, {
       responseType: 'json',
-      params: params,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET,POST'
-      }
+      params: params
     });
 
     return new Promise<any>((resolve, reject) => {
@@ -35,10 +31,10 @@ export class BooksService {
   }
 
   searchBooks(query: string) {
-    return this.get('/search.json/', {title: query});
+    return this.get('/search.json', {title: query});
   }
 
   searchAuthor(query: string) {
-    return this.get('/search.json/', {author: query})
+    return this.get('/search.json', {author: query})
   }
 }
