@@ -22,12 +22,12 @@ function post() {
         }
         req.onsuccess = (event) => {
             fetch('http://notif-dummy.herokuapp.com/notif', {
-        method: 'POST',
-        headers: {
+            method: 'POST',
+            headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({obj: 'obj'})
-    }).then(Promise.resolve());
+            },
+            body: JSON.stringify(req.result)
+        }).then(Promise.resolve());
         }
     }
 }

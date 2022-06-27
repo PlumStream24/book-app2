@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SwPush, SwRegistrationOptions } from '@angular/service-worker';
+import { posix } from 'path';
 import { IdbService } from './idb/idb.service';
 
 @Component({
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchForm = this.formBuilder.group({
-      search: ['', Validators.required],
+      search: [''],
     });
     window.addEventListener('online',  this.onNetworkStatusChange.bind(this));
     window.addEventListener('offline', this.onNetworkStatusChange.bind(this));
@@ -39,6 +40,10 @@ export class AppComponent implements OnInit {
         window.open(notification.data);
       }
     )
+
+    if (!navigator.geolocation) {
+      console.log("Unable to get location");
+    }
   }
 
   onSearch(): void {
@@ -92,6 +97,19 @@ export class AppComponent implements OnInit {
     navigator.serviceWorker.ready.then((swRegistration) =>
       swRegistration.sync.register('notif')
     ).catch(console.log)
+  }
+
+  watchPosition() {
+    navigator.geolocation.watchPosition(
+      pos => {
+        console.log(`lat: ${pos.coords.latitude}, lon: ${pos.coords.longitude}`);
+      }, err => {
+        console.log(err);
+      }, {
+        timeout: 5000,
+        maximumAge: 0
+      }
+    )
   }
 }
 
